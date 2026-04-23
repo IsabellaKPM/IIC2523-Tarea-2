@@ -1,0 +1,147 @@
+2                               # 2 nodos proponente
+Nodo_A;Nodo_B;Nodo_C;Nodo_D     # 4 nodos en total
+1;2;3;4	    			        # D y C tiene ID más alto. Serán proponentes
+
+# Empezamos los eventos
+
+####################################
+############ FASE 1 - Stop te protege de olvidar cosas por "Learn"
+####################################
+
+Prepare;Nodo_C;1
+Prepare;Nodo_D;23
+
+Accept;Nodo_D;12;SET-mejor_pelicula-Kaguya 
+# Accept no se manda porque Nodo_D no hizo Prepare exitoso con id=12
+
+Accept;Nodo_D;45;SET-mejor_pelicula-Kaguya 
+# Accept no se manda porque Nodo_D no hizo Prepare exitoso con id=45
+
+Accept;Nodo_D;23;SET-mejor_pelicula-Kaguya 
+# Accept se envía exitosamente.
+
+Stop;Nodo_B;Nodo_A
+# Todos los aceptantes se caen
+
+Learn
+# Se intenta consolidación, pero no hay consenso. Los nodos activos (solo D y C) olvidan todo.
+
+Start;Nodo_B;Nodo_A
+# Todos los aceptantes se levantan. Como mantienen su rol de aceptante, no reinician su estado.
+
+Accept;Nodo_C;1;DEL-mejor_pelicula
+# Accept no se manda porque Nodo_C no hizo Prepare exitoso con id=1 (Learn anterior hizo que olvidara todo)
+
+Prepare;Nodo_C;1
+# Rechazado porque los nodos ya hicieron una promesa a la propuesta con ID=23.
+
+Prepare;Nodo_C;24
+# Aceptado pero condicional, Nodo_C sabe la operación aceptada.
+
+Accept;Nodo_C;24;DEL-mejor_pelicula
+# Se manda la operación previamente aceptada (SET-mejor_pelicula-Kaguya) pero ahora con ID=24
+
+Learn
+# Ahora si se consolida la operación SET-mejor_pelicula-Kaguya. 
+# Todos olvidan todo.
+
+####################################
+############ FASE 2 - Cambiar Rol te obliga a olvidar lo que tenías, si no cambias... no olvidas.
+####################################
+
+Prepare;Nodo_C;1
+# Aceptado
+
+Accept;Nodo_C;1;SET-puntaje_kaguya-1000
+# Aceptado
+
+Stop;Nodo_C;Nodo_D;Nodo_A
+# Se caen 3 nodos, 2 de ellos son proponetes. Así que nodo B pasa a ser proponente (olvida su estado como aceptante)
+
+Prepare;Nodo_B;4444
+# Rechazado, no obtiene los 2 ok necesarios (obtiene 0)
+
+Prepare;Nodo_C;4445
+# El nodo está caído, no procesa mensajes.
+
+Stop;Nodo_B
+# Se cae nodo B, ahora no hay ningún nodo proponente.
+
+Start;Nodo_C
+# Hay 0 proponentes, hay que llegar a K=2 nodos proponentes. Solo se logra escoger 1 (Nodo C)
+# C ya era proponente antes, así que mantiene su rol. No olvida que su Prepare con ID=1 fue aceptado.
+
+Start;Nodo_B;Nodo_A
+# Hay 1 proponente y se necesita otro proponente.
+# B ya era proponente antes, así que mantiene su rol.
+# A ya era aceptantes antes, así que mantiene su rol. No olvida que aceptó "puntaje_kaguya-1000" con ID=1
+
+Prepare;Nodo_B;4444
+# Rechazado, no obtiene los 2 ok necesarios (solo obtiene 1 ok condicionado de A)
+
+Start;Nodo_D
+# D pasa a ser aceptante. Olvida todo como proponente.
+
+Prepare;Nodo_B;4444
+# A le indica que aceptó previamente puntaje_kaguya-1000
+# D solo manda Ok.
+
+Accept;Nodo_B;4444;SET-puntaje_kaguya-1 de 10
+# Se manda la operación que fue antes notificada con ID=4444 esta vez.
+
+Learn
+# A y D tiene la operación "puntaje_kaguya-1000" con ID=4444. Se consolida.
+# Todos los nodos activos olvidan todo.
+
+####################################
+############ FASE 3 - Mantienen rol así que no olvidan nada
+####################################
+
+Prepare;Nodo_C;3
+# Aceptado
+
+Accept;Nodo_C;3;SET-comentario-que buena pelicula!
+# Aceptado
+
+Stop;Nodo_A;Nodo_B;Nodo_C;Nodo_D
+# Todos se caen
+
+Start;Nodo_B;Nodo_C
+# Prendemos los 2 proponentes para que mantengan rol. Así no olvidan nada.
+
+Start;Nodo_A;Nodo_B;Nodo_C;Nodo_D
+# Prendemos todos los demás. A y D mantienen rol, así que nadie olvida nada.
+
+Learn
+# A y D tiene la operación "SET-comentario-que buena pelicula!" con ID=2. Se consolida.
+# Todos los nodos activos olvidan todo.
+
+####################################
+############ FASE 4 - Cambian rol, así que olvidan todo
+####################################
+
+Prepare;Nodo_C;122
+# Aceptado
+
+Prepare;Nodo_B;123
+# Aceptado
+
+Accept;Nodo_B;123;SET-comentario-no me gustó!
+# Aceptado
+
+Stop;Nodo_B;Nodo_C
+# Se caen proponentes, así que A y D pasan a ser proponentes (olvidan todo como aceptante)
+
+Stop;Nodo_A;Nodo_D
+# Los nuevos proponentes se caen ahora. No hay proponentes ahora.
+
+Start;Nodo_B;Nodo_C
+# Se levantan B y C que al final mantuvieron su rol
+#   --> Se cayeron siendo proponentes y ahora se activan volviendo a ser proponentes,
+# No olvidan nada.
+
+Start;Nodo_A;Nodo_D
+# A y D pasan a ser aceptantes. Olvidan todo nuevamente.
+
+Learn
+# No hay operación en los aceptantes. No se consolida nada.

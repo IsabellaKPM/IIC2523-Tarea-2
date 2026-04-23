@@ -1,0 +1,20 @@
+2					# 2 nodos proponentes
+Nodo_Kaguya;Nodo_2;Nodo;Hola Mundo	# 4 nodos en total
+10;20;1;8				# Nodo_2 y Nodo_Kaguya son con ID más alto. Serán proponentes
+
+# Empezamos los eventos
+Prepare;Nodo_Kaguya;1
+
+# Bifuración. Ahora hay 2 simulaciones.
+*Accept;Nodo_Kaguya;1;SET-mejor_pelicula-Kaguya 
+
+# En una simulación Nodo_2 se entera que ya existe la operación SET-mejor_pelicuka-Kaguya, en otra no.
+Prepare;Nodo_2;5
+
+# En una simulación, Nodo_2 manda SET-mejor_pelicula-Kaguya y en otra manda SET-mejor_pelicula-Kaguya-sama
+Accept;Nodo_2;5;SET-mejor_pelicula-Kaguya-sama  
+
+Log;mejor_pelicula # Saldrá [] porque todavía no se consolida
+Learn # Se consolida la acción
+
+# Fin simulación. La base de datos solo contiene "mejor_pelicula", pero con distintos valores.
