@@ -1,6 +1,0 @@
-LOGS
-No hubo logs
-BASE DE DATOS
-mejor_pelicula=['Kaguya']
-puntaje_kaguya=[1000]
-comentario=['que buena pelicula!']

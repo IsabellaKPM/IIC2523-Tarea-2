@@ -1,4 +1,0 @@
-LOGS
-No hubo logs
-BASE DE DATOS
-se_me_acabaron_las_ideas=['Sí', 'efectivamente se me acabaron']

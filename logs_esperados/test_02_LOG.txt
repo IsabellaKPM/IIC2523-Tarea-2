@@ -1,4 +1,0 @@
-LOGS
-mejor_pelicula=['Kaguya']
-BASE DE DATOS
-No hay datos

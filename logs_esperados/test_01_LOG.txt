@@ -1,4 +1,0 @@
-LOGS
-mejor_pelicula=[]
-BASE DE DATOS
-mejor_pelicula=['Kaguya', 'Kaguya-sama']
